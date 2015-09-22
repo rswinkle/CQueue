@@ -26,7 +26,7 @@ int que_i(queue_i* q, size_t capacity);
 int que_push_i(queue_i* q, int a);
 int que_pop_i(queue_i* q);
 
-int que_pushe_i(queue_i* q, int a)
+int que_pushe_i(queue_i* q, int a);
 int que_resize_i(queue_i* q, size_t size);
 
 int que_front_i(queue_i* q);

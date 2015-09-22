@@ -5,6 +5,7 @@
 
 
 extern void pushpop_i_test();
+extern void pushe_i_test();
 extern void resize_i_test();
 
 /*
@@ -31,6 +32,7 @@ extern void template_test2();
 
 CU_TestInfo queue_i_tests[] = {
 	{ "pushpop_i_test",        pushpop_i_test },
+	{ "pushe_i_test",          pushe_i_test },
 	{ "resize_i_test",         resize_i_test },
 	CU_TEST_INFO_NULL
 };

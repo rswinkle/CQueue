@@ -48,9 +48,13 @@ int que_pushe_i(queue_i* q, int a)
 		}
 		q->buf = tmp;
 
+		/* hmmm */
 		if (q->head) {
-			memmove(&q->buf[q->head+q->capacity], &q->buf[q->head], (q->capacity-q-head)*sizeof(int));
+			memmove(&q->buf[q->head+q->capacity], &q->buf[q->head], (q->capacity-q->head)*sizeof(int));
+		} else {
+			q->tail = q->capacity;
 		}
+
 		q->capacity = tmp_sz;
 	}
 
