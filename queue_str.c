@@ -1,19 +1,32 @@
-#include "queue_d.h"
+#include "queue_str.h"
 
 #include <string.h>
 #include <assert.h>
 
-size_t QUE_D_START_CAP = 50;
+size_t QUE_STR_START_CAP = 50;
 
-#define QUE_D_ALLOCATOR(x) ((x) * 2)
+#define QUE_STR_ALLOCATOR(x) ((x) * 2)
 
-int que_d(queue_d* q, size_t capacity)
+char* mystrdup(const char* str)
+{
+	
+	size_t len = strlen(str);
+	char* temp = (char*)calloc(len+1, sizeof(char));
+	if (!temp) {
+		assert(temp != NULL);
+		return NULL;
+	}
+	
+	return (char*)memcpy(temp, str, len);  
+}
+
+int que_str(queue_str* q, size_t capacity)
 {
 	q->head = q->tail = 0;
 	q->lastop = QUE_READ;
-	q->capacity = capacity ? capacity : QUE_D_START_CAP;
+	q->capacity = capacity ? capacity : QUE_STR_START_CAP;
 
-	if (!(q->buf = (double*)malloc(q->capacity*sizeof(double)))) {
+	if (!(q->buf = (char**)malloc(q->capacity*sizeof(char*)))) {
 		assert(q->buf != NULL);
 		q->capacity = 0;
 		return 0;
@@ -22,27 +35,27 @@ int que_d(queue_d* q, size_t capacity)
 	return 1;
 }
 
-int que_push_d(queue_d* q, double a)
+int que_push_str(queue_str* q, char* a)
 {
 	if (q->head == q->tail && q->lastop == QUE_WRITE) {
 		assert(q->head != q->tail || q->lastop != QUE_WRITE);
 		return 0;
 	}
 
-	q->buf[q->tail] = a;
+	q->buf[q->tail] = mystrdup(a);
 	q->tail++;
 	q->tail %= q->capacity;
 	q->lastop = QUE_WRITE;
 	return 1;
 }
 
-int que_pushe_d(queue_d* q, double a)
+int que_pushe_str(queue_str* q, char* a)
 {
-	double* tmp;
+	char** tmp;
 	size_t tmp_sz;
 	if (q->head == q->tail && q->lastop == QUE_WRITE) {
-		tmp_sz = QUE_D_ALLOCATOR(q->capacity);
-		if (!(tmp = (double*)realloc(q->buf, sizeof(double)*tmp_sz))) {
+		tmp_sz = QUE_STR_ALLOCATOR(q->capacity);
+		if (!(tmp = (char**)realloc(q->buf, sizeof(char*)*tmp_sz))) {
 			assert(tmp != NULL);
 			return 0;
 		}
@@ -50,7 +63,7 @@ int que_pushe_d(queue_d* q, double a)
 
 		/* hmmm */
 		if (q->head) {
-			memmove(&q->buf[q->head+q->capacity], &q->buf[q->head], (q->capacity-q->head)*sizeof(double));
+			memmove(&q->buf[q->head+q->capacity], &q->buf[q->head], (q->capacity-q->head)*sizeof(char*));
 		} else {
 			q->tail = q->capacity;
 		}
@@ -58,7 +71,7 @@ int que_pushe_d(queue_d* q, double a)
 		q->capacity = tmp_sz;
 	}
 
-	q->buf[q->tail] = a;
+	q->buf[q->tail] = mystrdup(a);
 	q->tail++;
 	q->tail %= q->capacity;
 	q->lastop = QUE_WRITE;
@@ -69,50 +82,47 @@ int que_pushe_d(queue_d* q, double a)
  * it's programmers responsibility 
  * to make sure it's not empty
 */
-double que_pop_d(queue_d* q)
+void que_pop_str(queue_str* q)
 {
-	double a;
-
 	assert(q->head != q->tail || q->lastop == QUE_WRITE);
 
-	a = q->buf[q->head];
+	free(q->buf[q->head]);
+
 	q->head++;
 	q->head %= q->capacity;
 	q->lastop = QUE_READ;
 
 	if (q->head == q->tail)
 		q->head = q->tail = 0;
-
-	return a;
 }
 
-int que_resize_d(queue_d* q, size_t size)
+int que_resize_str(queue_str* q, size_t size)
 {
 	size_t sz;
-	double* tmp = NULL;
+	char** tmp = NULL;
 
-	sz = que_size_d(q);
+	sz = que_size_str(q);
 	if (size < sz) {
 		assert(size < sz);
 		return 0;
 	}
 
 	if (size > q->capacity && q->tail > q->head) {
-		if (!(tmp = (double*)realloc(q->buf, sizeof(double)*size))) {
+		if (!(tmp = (char**)realloc(q->buf, sizeof(char*)*size))) {
 			assert(tmp != NULL);
 			return 0;
 		}
 		q->buf = tmp;
 
 	} else {
-		tmp = (double*)malloc(size*sizeof(double));
+		tmp = (char**)malloc(size*sizeof(char*));
 		if (q->tail < q->head) {
-			memcpy(tmp, &q->buf[q->head], (q->capacity-q->head)*sizeof(double));
-			memcpy(&tmp[q->capacity-q->head], q->buf, q->tail*sizeof(double));
+			memcpy(tmp, &q->buf[q->head], (q->capacity-q->head)*sizeof(char*));
+			memcpy(&tmp[q->capacity-q->head], q->buf, q->tail*sizeof(char*));
 		} else if (q->tail > q->head) {
-			memcpy(tmp, &q->buf[q->head], (q->tail-q->head)*sizeof(double));
+			memcpy(tmp, &q->buf[q->head], (q->tail-q->head)*sizeof(char*));
 		} else {
-			memcpy(tmp, &q->buf[q->head], sz*sizeof(double));
+			memcpy(tmp, &q->buf[q->head], sz*sizeof(char*));
 		}
 		free(q->buf);
 		q->buf = tmp;
@@ -124,28 +134,28 @@ int que_resize_d(queue_d* q, size_t size)
 	return 1;
 }
 
-double que_front_d(queue_d* q)
+char* que_front_str(queue_str* q)
 {
 	return q->buf[q->head];
 }
 
-double que_back_d(queue_d* q)
+char* que_back_str(queue_str* q)
 {
 	return q->buf[q->tail-1];
 }
 
 
-int que_is_empty_d(queue_d* q)
+int que_is_empty_str(queue_str* q)
 {
 	return q->head == q->tail && q->lastop == QUE_READ;
 }
 
-int que_is_full_d(queue_d* q)
+int que_is_full_str(queue_str* q)
 {
 	return q->head == q->tail && q->lastop == QUE_WRITE;
 }
 
-size_t que_size_d(queue_d* q)
+size_t que_size_str(queue_str* q)
 {
 	if (q->tail < q->head) {
 		return q->capacity - q->head + q->tail;
@@ -158,9 +168,14 @@ size_t que_size_d(queue_d* q)
 	}
 }
 
-void free_que_d(void* q)
+void free_que_str(void* q)
 {
-	queue_d* tmp = (queue_d*)q;
+	size_t sz, i;
+	queue_str* tmp = (queue_str*)q;
+	sz = que_size_str(tmp);
+	for (i=0; i<sz; ++i) {
+		free(tmp->buf[(tmp->head+i)%tmp->capacity]);
+	}
 	free(tmp->buf);
 	tmp->capacity = 0;
 }

@@ -1,5 +1,6 @@
 #include "queue_i.h"
 #include "queue_d.h"
+#include "queue_str.h"
 
 #include <stdio.h>
 
@@ -252,6 +253,145 @@ void resize_d_test()
 	CU_ASSERT_EQUAL(35, que_size_d(&q));
 
 	free_que_d(&q);
+
+}
+
+/* queue_str tests */
+void pushpop_str_test()
+{
+	int in, out, j;
+	char buffer[50];
+	queue_str q;
+	que_str(&q, 20);
+
+	CU_ASSERT_EQUAL(20, q.capacity);
+
+	for (in=0; in<q.capacity; in++) {
+		sprintf(buffer, "hello %d", in);
+		que_push_str(&q, buffer);
+	}
+
+	CU_ASSERT_EQUAL(q.capacity, que_size_str(&q));
+	CU_ASSERT(que_is_full_str(&q));
+
+
+	for (out=0; out<10; ++out) {
+		sprintf(buffer, "hello %d", out);
+		CU_ASSERT_STRING_EQUAL(que_front_str(&q), buffer);
+		que_pop_str(&q);
+	}
+	putchar('\n');
+	CU_ASSERT_EQUAL(10, que_size_str(&q));
+
+	for (j=0; j<10; ++in, ++j) {
+		sprintf(buffer, "hello %d", in);
+		que_push_str(&q, buffer);
+	}
+
+	for (j=0; j<20; ++j, ++out) {
+		sprintf(buffer, "hello %d", out);
+		CU_ASSERT_STRING_EQUAL(que_front_str(&q), buffer);
+		que_pop_str(&q);
+	}
+	putchar('\n');
+
+	CU_ASSERT_EQUAL(0, que_size_str(&q));
+	CU_ASSERT(que_is_empty_str(&q));
+
+	free_que_str(&q);
+}
+
+void pushe_str_test()
+{
+	int in, out, j;
+	char buffer[50];
+	queue_str q;
+	que_str(&q, 20);
+
+	CU_ASSERT_EQUAL(20, q.capacity);
+
+	for (in=0; in<100; in++) {
+		sprintf(buffer, "hello %d", in);
+		que_pushe_str(&q, buffer);
+	}
+
+	printf("\nsize = %lu\n", (unsigned long)que_size_str(&q));
+	CU_ASSERT_EQUAL(100, que_size_str(&q));
+	CU_ASSERT_EQUAL(q.capacity, 160);
+	CU_ASSERT(!que_is_full_str(&q));
+
+
+	for (out=0; out<10; ++out) {
+		sprintf(buffer, "hello %d", out);
+		CU_ASSERT_STRING_EQUAL(q.buf[q.head], buffer);
+		que_pop_str(&q);
+	}
+	putchar('\n');
+	CU_ASSERT_EQUAL(90, que_size_str(&q));
+
+	for (j=0; j<10; ++in, ++j) {
+		sprintf(buffer, "hello %d", in);
+		que_pushe_str(&q, buffer);
+	}
+
+	for (j=0; j<20; ++j, ++out) {
+		sprintf(buffer, "hello %d", out);
+		CU_ASSERT_STRING_EQUAL(q.buf[q.head], buffer);
+		que_pop_str(&q);
+	}
+	putchar('\n');
+
+	CU_ASSERT_EQUAL(80, que_size_str(&q));
+
+	free_que_str(&q);
+}
+
+void resize_str_test()
+{
+	int in, out, j;
+	char buffer[50];
+	queue_str q;
+	que_str(&q, 100);
+
+	CU_ASSERT_EQUAL(100, q.capacity);
+
+	for (in=0; in<q.capacity; ++in) {
+		sprintf(buffer, "hello %d", in);
+		que_push_str(&q, buffer);
+	}
+
+	CU_ASSERT_EQUAL(q.capacity, que_size_str(&q));
+
+	for (j=0; j<q.capacity; ++j) {
+		sprintf(buffer, "hello %d", j);
+		CU_ASSERT_STRING_EQUAL(q.buf[j], buffer);
+	}
+
+	for (out=0; out<60; ++out) {
+		sprintf(buffer, "hello %d", out);
+		CU_ASSERT_STRING_EQUAL(q.buf[q.head], buffer);
+		que_pop_str(&q);
+	}
+	putchar('\n');
+	CU_ASSERT_EQUAL(40, que_size_str(&q));
+
+	que_resize_str(&q, 50);
+
+	for (j=0; j<10; ++j, ++in) {
+		sprintf(buffer, "hello %d", in);
+		que_push_str(&q, buffer);
+	}
+
+	for (j=0; j<15; ++j, ++out) {
+		sprintf(buffer, "hello %d", out);
+		CU_ASSERT_STRING_EQUAL(q.buf[q.head], buffer);
+		que_pop_str(&q);
+	}
+	putchar('\n');
+
+	CU_ASSERT_EQUAL(35, que_size_str(&q));
+
+	free_que_str(&q);
 
 }
 

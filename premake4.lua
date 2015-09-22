@@ -16,6 +16,8 @@ solution "CQueue"
 			"queue_i.h",
 			"queue_d.c",
 			"queue_d.h",
+			"queue_str.c",
+			"queue_str.h",
 			"queue_tests.c"
 		}
 		excludes
