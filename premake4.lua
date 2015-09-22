@@ -14,6 +14,8 @@ solution "CQueue"
 			"main.c",
 			"queue_i.c",
 			"queue_i.h",
+			"queue_d.c",
+			"queue_d.h",
 			"queue_tests.c"
 		}
 		excludes

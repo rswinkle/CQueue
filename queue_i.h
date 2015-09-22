@@ -1,5 +1,5 @@
-#ifndef CQUEUE_H
-#define CQUEUE_H
+#ifndef QUEUEI_H
+#define QUEUEI_H
 
 #include <stdlib.h>
 

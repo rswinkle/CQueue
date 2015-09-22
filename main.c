@@ -8,11 +8,12 @@ extern void pushpop_i_test();
 extern void pushe_i_test();
 extern void resize_i_test();
 
-/*
-extern void push_d_test();
-extern void pop_d_test();
-extern void set_capacity_d_test();
+extern void pushpop_d_test();
+extern void pushe_d_test();
+extern void resize_d_test();
 
+
+/*
 
 extern void push_str_test();
 extern void pop_str_test();
@@ -37,13 +38,14 @@ CU_TestInfo queue_i_tests[] = {
 	CU_TEST_INFO_NULL
 };
 
-/*
 CU_TestInfo queue_d_tests[] = {
-	{ "push_d_test",           push_d_test },
-	{ "pop_d_test",            pop_d_test },
-	{ "set_capacity_d_test",   set_capacity_d_test },
+	{ "pushpop_d_test",        pushpop_d_test },
+	{ "pushe_d_test",          pushe_d_test },
+	{ "resize_d_test",         resize_d_test },
 	CU_TEST_INFO_NULL
 };
+
+/*
 
 CU_TestInfo queue_s_tests[] = {
 	{ "push_str_test",           push_str_test },
@@ -76,8 +78,8 @@ CU_TestInfo template_tests[] = {
 
 CU_SuiteInfo queue_suites[] = {
 	{ "queue_i", NULL, NULL, queue_i_tests },
-	/*
 	{ "queue_d", NULL, NULL, queue_d_tests },
+	/*
 	{ "queue_str", NULL, NULL, queue_s_tests },
 	{ "queue",   NULL, NULL, queue_tests   },
 	{ "template", NULL, NULL, template_tests },

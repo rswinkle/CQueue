@@ -1,4 +1,5 @@
 #include "queue_i.h"
+#include "queue_d.h"
 
 #include <stdio.h>
 
@@ -96,12 +97,12 @@ void resize_i_test()
 
 	CU_ASSERT_EQUAL(100, q.capacity);
 
-	for (i=0; i<q.capacity; i++)
+	for (i=0; i<q.capacity; ++i)
 		que_push_i(&q, i);
 
 	CU_ASSERT_EQUAL(q.capacity, que_size_i(&q));
 
-	for (i=0; i<q.capacity; i++)
+	for (i=0; i<q.capacity; ++i)
 		CU_ASSERT_EQUAL(i, q.buf[i]);
 
 	for (i=0; i<60; ++i) {
@@ -114,7 +115,7 @@ void resize_i_test()
 
 	que_resize_i(&q, 50);
 
-	for (i=0; i<10; i++)
+	for (i=0; i<10; ++i)
 		que_push_i(&q, i+100);
 
 	for (i=0; i<15; ++i) {
@@ -129,3 +130,128 @@ void resize_i_test()
 	free_que_i(&q);
 
 }
+
+
+/* queue_d tests */
+void pushpop_d_test()
+{
+	double in, out, j, tmp;
+	queue_d q;
+	que_d(&q, 20);
+
+	CU_ASSERT_EQUAL(20, q.capacity);
+
+	for (in=0.5; in<q.capacity; in++)
+		que_push_d(&q, in);
+
+	CU_ASSERT_EQUAL(q.capacity, que_size_d(&q));
+	CU_ASSERT(que_is_full_d(&q));
+
+
+	for (out=0.5; out<10; ++out) {
+		tmp = que_pop_d(&q);
+		printf("%f ", tmp);
+		CU_ASSERT_EQUAL(tmp, out);
+	}
+	putchar('\n');
+	CU_ASSERT_EQUAL(10, que_size_d(&q));
+
+	for (j=0; j<10; ++in, ++j)
+		que_push_d(&q, in);
+
+	for (j=0; j<20; ++j, ++out) {
+		tmp = que_pop_d(&q);
+		printf("%f ", tmp);
+		CU_ASSERT_EQUAL(tmp, out);
+	}
+	putchar('\n');
+
+	CU_ASSERT_EQUAL(0, que_size_d(&q));
+	CU_ASSERT(que_is_empty_d(&q));
+
+	free_que_d(&q);
+}
+
+void pushe_d_test()
+{
+	double in, out, j, tmp;
+	queue_d q;
+	que_d(&q, 20);
+
+	CU_ASSERT_EQUAL(20, q.capacity);
+
+	for (in=0.5; in<100; in++)
+		que_pushe_d(&q, in);
+
+	printf("\nsize = %lu\n", (unsigned long)que_size_d(&q));
+	CU_ASSERT_EQUAL(100, que_size_d(&q));
+	CU_ASSERT_EQUAL(q.capacity, 160);
+	CU_ASSERT(!que_is_full_d(&q));
+
+
+	for (out=0.5; out<10; ++out) {
+		tmp = que_pop_d(&q);
+		printf("%f ", tmp);
+		CU_ASSERT_EQUAL(tmp, out);
+	}
+	putchar('\n');
+	CU_ASSERT_EQUAL(90, que_size_d(&q));
+
+	for (j=0; j<10; ++in, ++j)
+		que_pushe_d(&q, in);
+
+	for (j=0; j<20; ++j, ++out) {
+		tmp = que_pop_d(&q);
+		printf("%f ", tmp);
+		CU_ASSERT_EQUAL(tmp, out);
+	}
+	putchar('\n');
+
+	CU_ASSERT_EQUAL(80, que_size_d(&q));
+
+	free_que_d(&q);
+}
+
+void resize_d_test()
+{
+	double in, out, tmp;
+	int j;
+	queue_d q;
+	que_d(&q, 100);
+
+	CU_ASSERT_EQUAL(100, q.capacity);
+
+	for (in=0.5; in<q.capacity; in++)
+		que_push_d(&q, in);
+
+	CU_ASSERT_EQUAL(q.capacity, que_size_d(&q));
+
+	for (j=0; j<q.capacity; ++j)
+		CU_ASSERT_EQUAL(j+0.5, q.buf[j]);
+
+	for (out=0.5; out<60; ++out) {
+		tmp = que_pop_d(&q);
+		printf("%f ", tmp);
+		CU_ASSERT_EQUAL(tmp, out);
+	}
+	putchar('\n');
+	CU_ASSERT_EQUAL(40, que_size_d(&q));
+
+	que_resize_d(&q, 50);
+
+	for (j=0; j<10; ++j, ++in)
+		que_push_d(&q, in);
+
+	for (j=0; j<15; ++j, ++out) {
+		tmp = que_pop_d(&q);
+		printf("%f ", tmp);
+		CU_ASSERT_EQUAL(tmp, out);
+	}
+	putchar('\n');
+
+	CU_ASSERT_EQUAL(35, que_size_d(&q));
+
+	free_que_d(&q);
+
+}
+
