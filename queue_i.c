@@ -5,6 +5,7 @@
 
 size_t QUE_I_START_CAP = 50;
 
+#define QUE_I_ALLOCATOR(x) ((x) * 2)
 
 int que_i(queue_i* q, size_t capacity)
 {
@@ -26,6 +27,31 @@ int que_push_i(queue_i* q, int a)
 	if (q->head == q->tail && q->lastop == QUE_WRITE) {
 		assert(q->head != q->tail || q->lastop != QUE_WRITE);
 		return 0;
+	}
+
+	q->buf[q->tail] = a;
+	q->tail++;
+	q->tail %= q->capacity;
+	q->lastop = QUE_WRITE;
+	return 1;
+}
+
+int que_pushe_i(queue_i* q, int a)
+{
+	int* tmp;
+	size_t tmp_sz;
+	if (q->head == q->tail && q->lastop == QUE_WRITE) {
+		tmp_sz = QUE_I_ALLOCATOR(q->capacity);
+		if (!(tmp = (int*)realloc(q->buf, sizeof(int)*tmp_sz))) {
+			assert(tmp != NULL);
+			return 0;
+		}
+		q->buf = tmp;
+
+		if (q->head) {
+			memmove(&q->buf[q->head+q->capacity], &q->buf[q->head], (q->capacity-q-head)*sizeof(int));
+		}
+		q->capacity = tmp_sz;
 	}
 
 	q->buf[q->tail] = a;

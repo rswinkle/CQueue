@@ -11,39 +11,39 @@
 /* queue_i tests */
 void pushpop_i_test()
 {
-	int i, tmp;
+	int in, out, j, tmp;
 	queue_i q;
 	que_i(&q, 20);
 
 	CU_ASSERT_EQUAL(20, q.capacity);
 
-	for (i=0; i<q.capacity; i++)
-		que_push_i(&q, i);
+	for (in=0; in<q.capacity; in++)
+		que_push_i(&q, in);
 
 	CU_ASSERT_EQUAL(q.capacity, que_size_i(&q));
+	CU_ASSERT(que_is_full_i(&q));
 
-	for (i=0; i<q.capacity; i++)
-		CU_ASSERT_EQUAL(i, q.buf[i]);
 
-	for (i=0; i<10; ++i) {
+	for (out=0; out<10; ++out) {
 		tmp = que_pop_i(&q);
 		printf("%d ", tmp);
-		CU_ASSERT_EQUAL(tmp, i);
+		CU_ASSERT_EQUAL(tmp, out);
 	}
 	putchar('\n');
 	CU_ASSERT_EQUAL(10, que_size_i(&q));
 
-	for (i=0; i<10; i++)
-		que_push_i(&q, i+20);
+	for (j=0; j<10; ++in, ++j)
+		que_push_i(&q, in);
 
-	for (i=0; i<20; ++i) {
+	for (j=0; j<20; ++j, ++out) {
 		tmp = que_pop_i(&q);
 		printf("%d ", tmp);
-		CU_ASSERT_EQUAL(tmp, i+10);
+		CU_ASSERT_EQUAL(tmp, out);
 	}
 	putchar('\n');
 
 	CU_ASSERT_EQUAL(0, que_size_i(&q));
+	CU_ASSERT(que_is_empty_i(&q));
 
 	free_que_i(&q);
 }
