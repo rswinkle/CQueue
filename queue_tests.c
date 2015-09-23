@@ -1,6 +1,7 @@
 #include "queue_i.h"
 #include "queue_d.h"
 #include "queue_str.h"
+#include "queue_void.h"
 
 #include <stdio.h>
 
@@ -405,4 +406,21 @@ void resize_str_test()
 	free_que_str(&q);
 
 }
+
+
+void pushpop_void_test()
+{
+
+}
+
+void pushe_void_test()
+{
+}
+
+void resize_void_test()
+{
+
+}
+
+
 
