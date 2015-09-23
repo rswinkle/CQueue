@@ -138,12 +138,12 @@ int que_resize_void(queue_void* q, size_t size)
 
 void* que_front_void(queue_void* q)
 {
-	return (void*)&q->buf[q->head];
+	return (void*)&q->buf[q->head*q->elem_size];
 }
 
 void* que_back_void(queue_void* q)
 {
-	return (void*)&q->buf[q->tail-1];
+	return (void*)&q->buf[(q->tail-1)*q->elem_size];
 }
 
 
