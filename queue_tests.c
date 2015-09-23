@@ -218,9 +218,9 @@ void resize_d_test()
 	double in, out, tmp;
 	int j;
 	queue_d q;
-	que_d(&q, 100);
+	que_d(&q, 10);
 
-	CU_ASSERT_EQUAL(100, q.capacity);
+	CU_ASSERT_EQUAL(10, q.capacity);
 
 	for (in=0.5; in<q.capacity; in++)
 		que_push_d(&q, in);
@@ -230,27 +230,38 @@ void resize_d_test()
 	for (j=0; j<q.capacity; ++j)
 		CU_ASSERT_EQUAL(j+0.5, q.buf[j]);
 
-	for (out=0.5; out<60; ++out) {
+	for (out=0.5, j=0; j<3; ++j, ++out) {
 		tmp = que_pop_d(&q);
-		printf("%f ", tmp);
+		printf("%.1f ", tmp);
 		CU_ASSERT_EQUAL(tmp, out);
 	}
 	putchar('\n');
-	CU_ASSERT_EQUAL(40, que_size_d(&q));
+	for (j=0; j<q.capacity; ++j)
+		printf("%.1f ", q.buf[j]);
+	putchar('\n');
 
-	que_resize_d(&q, 50);
+	for (j=0; j<3; ++j, ++in)
+		que_push_d(&q, in);
+	for (j=0; j<q.capacity; ++j)
+		printf("%.1f ", q.buf[j]);
+	putchar('\n');
+
+	que_resize_d(&q, 20);
+	for (j=0; j<q.capacity; ++j)
+		printf("%.1f ", q.buf[j]);
+	putchar('\n');
 
 	for (j=0; j<10; ++j, ++in)
 		que_push_d(&q, in);
 
-	for (j=0; j<15; ++j, ++out) {
+	for (j=0; j<20; ++j, ++out) {
 		tmp = que_pop_d(&q);
-		printf("%f ", tmp);
+		printf("%.1f ", tmp);
 		CU_ASSERT_EQUAL(tmp, out);
 	}
 	putchar('\n');
 
-	CU_ASSERT_EQUAL(35, que_size_d(&q));
+	CU_ASSERT_EQUAL(0, que_size_d(&q));
 
 	free_que_d(&q);
 

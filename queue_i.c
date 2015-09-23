@@ -93,7 +93,7 @@ int que_resize_i(queue_i* q, size_t size)
 
 	sz = que_size_i(q);
 	if (size < sz) {
-		assert(size < sz);
+		assert(size >= sz);
 		return 0;
 	}
 
@@ -106,13 +106,11 @@ int que_resize_i(queue_i* q, size_t size)
 
 	} else {
 		tmp = (int*)malloc(size*sizeof(int));
-		if (q->tail < q->head) {
+		if (q->tail <= q->head) {
 			memcpy(tmp, &q->buf[q->head], (q->capacity-q->head)*sizeof(int));
 			memcpy(&tmp[q->capacity-q->head], q->buf, q->tail*sizeof(int));
-		} else if (q->tail > q->head) {
-			memcpy(tmp, &q->buf[q->head], (q->tail-q->head)*sizeof(int));
 		} else {
-			memcpy(tmp, &q->buf[q->head], sz*sizeof(int));
+			memcpy(tmp, &q->buf[q->head], (q->tail-q->head)*sizeof(int));
 		}
 		free(q->buf);
 		q->buf = tmp;
