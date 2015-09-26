@@ -39,9 +39,10 @@ int que_push_i(queue_i* q, int a)
 int que_pushe_i(queue_i* q, int a)
 {
 	int* tmp;
-	size_t tmp_sz;
+	size_t tmp_sz, inc;
 	if (q->head == q->tail && q->lastop == QUE_WRITE) {
 		tmp_sz = QUE_I_ALLOCATOR(q->capacity);
+		inc = tmp_sz - q->capacity;
 		if (!(tmp = (int*)realloc(q->buf, sizeof(int)*tmp_sz))) {
 			assert(tmp != NULL);
 			return 0;
@@ -50,7 +51,7 @@ int que_pushe_i(queue_i* q, int a)
 
 		/* hmmm */
 		if (q->head) {
-			memmove(&q->buf[q->head+q->capacity], &q->buf[q->head], (q->capacity-q->head)*sizeof(int));
+			memmove(&q->buf[q->head+inc], &q->buf[q->head], (q->capacity-q->head)*sizeof(int));
 		} else {
 			q->tail = q->capacity;
 		}

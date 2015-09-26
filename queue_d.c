@@ -39,9 +39,10 @@ int que_push_d(queue_d* q, double a)
 int que_pushe_d(queue_d* q, double a)
 {
 	double* tmp;
-	size_t tmp_sz;
+	size_t tmp_sz, inc;
 	if (q->head == q->tail && q->lastop == QUE_WRITE) {
 		tmp_sz = QUE_D_ALLOCATOR(q->capacity);
+		inc = tmp_sz - q->capacity;
 		if (!(tmp = (double*)realloc(q->buf, sizeof(double)*tmp_sz))) {
 			assert(tmp != NULL);
 			return 0;
@@ -50,7 +51,7 @@ int que_pushe_d(queue_d* q, double a)
 
 		/* hmmm */
 		if (q->head) {
-			memmove(&q->buf[q->head+q->capacity], &q->buf[q->head], (q->capacity-q->head)*sizeof(double));
+			memmove(&q->buf[q->head+inc], &q->buf[q->head], (q->capacity-q->head)*sizeof(double));
 		} else {
 			q->tail = q->capacity;
 		}

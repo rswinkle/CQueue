@@ -48,9 +48,10 @@ int que_push_void(queue_void* q, void* a)
 int que_pushe_void(queue_void* q, void* a)
 {
 	byte* tmp;
-	size_t tmp_sz;
+	size_t tmp_sz, inc;
 	if (q->head == q->tail && q->lastop == QUE_WRITE) {
 		tmp_sz = QUE_VOID_ALLOCATOR(q->capacity);
+		inc = tmp_sz - q->capacity;
 		if (!(tmp = (byte*)realloc(q->buf, tmp_sz*q->elem_size))) {
 			assert(tmp != NULL);
 			return 0;
@@ -59,7 +60,7 @@ int que_pushe_void(queue_void* q, void* a)
 
 		/* hmmm */
 		if (q->head) {
-			memmove(&q->buf[(q->head+tmp_sz-q->capacity)*q->elem_size], &q->buf[q->head*q->elem_size], (q->capacity-q->head)*q->elem_size);
+			memmove(&q->buf[(q->head+inc)*q->elem_size], &q->buf[q->head*q->elem_size], (q->capacity-q->head)*q->elem_size);
 		} else {
 			q->tail = q->capacity;
 		}

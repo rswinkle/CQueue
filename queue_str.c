@@ -52,9 +52,10 @@ int que_push_str(queue_str* q, char* a)
 int que_pushe_str(queue_str* q, char* a)
 {
 	char** tmp;
-	size_t tmp_sz;
+	size_t tmp_sz, inc;
 	if (q->head == q->tail && q->lastop == QUE_WRITE) {
 		tmp_sz = QUE_STR_ALLOCATOR(q->capacity);
+		inc = tmp_sz - q->capacity;
 		if (!(tmp = (char**)realloc(q->buf, sizeof(char*)*tmp_sz))) {
 			assert(tmp != NULL);
 			return 0;
@@ -63,7 +64,7 @@ int que_pushe_str(queue_str* q, char* a)
 
 		/* hmmm */
 		if (q->head) {
-			memmove(&q->buf[q->head+q->capacity], &q->buf[q->head], (q->capacity-q->head)*sizeof(char*));
+			memmove(&q->buf[q->head+inc], &q->buf[q->head], (q->capacity-q->head)*sizeof(char*));
 		} else {
 			q->tail = q->capacity;
 		}
