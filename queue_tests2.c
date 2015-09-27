@@ -1,5 +1,5 @@
-
-#include "queue_all.h"
+#define CQUEUE_IMPLEMENTATION
+#include "cqueue.h"
 
 #include <stdio.h>
 
@@ -660,6 +660,7 @@ void resize_void_test()
 	free_que_void(&q2);
 
 }
+
 
 
 
